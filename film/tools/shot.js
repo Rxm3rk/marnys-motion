@@ -8,7 +8,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const WORK = process.env.WORK_DIR || path.join(ROOT, 'work');
-const BROWSER = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(fs.existsSync);
+const BROWSER = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(fs.existsSync);
 const MIME = { '.json': 'application/json', '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ttf': 'font/ttf', '.otf': 'font/otf', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
 
 function resolveUrl(u) {
@@ -22,7 +22,7 @@ function resolveUrl(u) {
   const W = Number(W_), H = Number(H_);
   const browser = await puppeteer.launch({
     executablePath: BROWSER, headless: 'new',
-    args: ['--force-color-profile=srgb', '--hide-scrollbars', '--font-render-hinting=none', '--disable-lcd-text', '--allow-file-access-from-files'],
+    args: ['--force-color-profile=srgb', '--hide-scrollbars', '--font-render-hinting=none', '--disable-lcd-text', ...(process.getuid && process.getuid() === 0 ? ['--no-sandbox'] : []), '--allow-file-access-from-files'],
     defaultViewport: { width: W, height: H, deviceScaleFactor: 1 },
   });
   const page = await browser.newPage();

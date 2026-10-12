@@ -1,5 +1,5 @@
 // MARNYS · Beauty In & Out — deterministic renderer
-//   node render.js [workers=4] [fps=50] [sub=4]     env: LANG_=ku|ar  OUT=renders/picture_ku.mp4  WORK_DIR=<frame caches>
+//   node render.js [workers=4] [fps=50] [sub=4]     env: LANG_=ku|ar  OUT=renders/picture_ku.mp4  WORK_DIR=<frame caches>  CHROME=<browser path>
 // Seeks window.__seek(t) for every sample, captures JPEG via CDP, and lets ffmpeg average `sub` samples across a
 // 180° shutter (real motion blur on the graphics; the 25 fps footage is held for exactly 2 frames at 50 fps).
 const puppeteer = require('puppeteer-core');
@@ -9,7 +9,7 @@ const path = require('path');
 
 const ROOT = __dirname;
 const WORK = process.env.WORK_DIR || path.join(ROOT, 'work');
-const BROWSER = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(fs.existsSync);
+const BROWSER = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(fs.existsSync);
 const LANG = process.env.LANG_ || 'ku';
 const OUT = process.env.OUT || path.join(ROOT, 'renders', `picture_${LANG}.mp4`);
 const SEG = path.join(WORK, `seg_${LANG}`);
@@ -19,7 +19,7 @@ const [WORKERS = 4, FPS = 50, SUB = 4] = process.argv.slice(2).map(Number);
 async function openPage(tag) {
   const browser = await puppeteer.launch({
     executablePath: BROWSER, headless: 'new',
-    args: ['--force-color-profile=srgb', '--hide-scrollbars', '--font-render-hinting=none', '--disable-lcd-text'],
+    args: ['--force-color-profile=srgb', '--hide-scrollbars', '--font-render-hinting=none', '--disable-lcd-text', ...(process.getuid && process.getuid() === 0 ? ['--no-sandbox'] : [])],
     defaultViewport: { width: 1080, height: 1920, deviceScaleFactor: 1 },
   });
   const page = await browser.newPage();

@@ -6,7 +6,7 @@
 <!--
   MARNYS Iraq · Beauty In & Out Elixir · "Mirror vs Reality" reel (1080×1920).
   Deterministic: every visual state is a function of timeline time. window.__seek(t) seeks the GSAP
-  timeline, swaps footage frames (graded JPEG caches, 25 fps source) and recomputes the arch geometry.
+  timeline, swaps footage frames (graded JPEG caches, shown at 25 fps) and recomputes the arch geometry.
   ?lang=ku (default) or ?lang=ar.
 -->
 <style>
@@ -228,13 +228,14 @@
   $('#cta .l1').textContent = COPY.cta1; $('#cta .l2').textContent = COPY.cta2;
 
   // ---------- footage ----------
+  // caches hold consecutive 30p source frames shown at 25 fps (tools/frames.sh); frame 1 is on screen at `start`
   const FPS_SRC = 25;
   const SHOTS = {
-    A: { el: $('#shotA'), imgs: $$('#shotA img.main'), start: 0.80, n: 90,  map: t => t + 1.0 },   // 35088445 hazy, mirrored
-    B: { el: $('#shotB'), imgs: $$('#shotB img'), start: 5.00, n: 150, map: t => t + 3.2 },   // 35088444 hair → turn
-    C: { el: $('#shotC'), imgs: $$('#shotC img'), start: 8.80, n: 48,  map: t => t + 1.5 },   // 35088462 hair toss
-    D: { el: $('#shotD'), imgs: $$('#shotD img'), start: 1.20, n: 48,  map: t => t - 7.6 },   // 35088447 skin
-    E: { el: $('#shotE'), imgs: $$('#shotE img'), start: 18.28, n: 70, map: t => t + 8.0 },   // 35088453 hand / nails
+    A: { el: $('#shotA'), imgs: $$('#shotA img.main'), start: 0.0,  n: 72,  map: t => t },   // 7957707 face to camera, hazed, mirrored
+    B: { el: $('#shotB'), imgs: $$('#shotB img'), start: 2.2,  n: 131, map: t => t },   // 7957700 back of hair → cut at 4.4 → 7957703 face
+    C: { el: $('#shotC'), imgs: $$('#shotC img'), start: 7.4,  n: 40,  map: t => t },   // 7957699 hair in the air
+    D: { el: $('#shotD'), imgs: $$('#shotD img'), start: 8.9,  n: 40,  map: t => t },   // 7957697 skin close-up
+    E: { el: $('#shotE'), imgs: $$('#shotE img'), start: 10.4, n: 64,  map: t => t },   // 7957703 red nails, hand on her shoulder
   };
   const frameUrl = (k, i) => `work/frames/${k}/${String(i).padStart(4, '0')}.jpg`;
   function frameIndex(s, t) {
@@ -299,9 +300,9 @@
 
   // ---------- callouts ----------
   const CALL = [   // target (tx,ty) on the subject, pill centre (cx,cy)
-    { id: '#co0', n: '01  HAIR',  k: COPY.ben[0], tx: 706, ty: 1088, cx: 706, cy: 600 },
-    { id: '#co1', n: '02  SKIN',  k: COPY.ben[1], tx: 702, ty: 968,  cx: 812, cy: 560 },
-    { id: '#co2', n: '03  NAILS', k: COPY.ben[2], tx: 488, ty: 1214, cx: 250, cy: 900 },
+    { id: '#co0', n: '01  HAIR',  k: COPY.ben[0], tx: 805, ty: 1170, cx: 840, cy: 640 },
+    { id: '#co1', n: '02  SKIN',  k: COPY.ben[1], tx: 800, ty: 980,  cx: 860, cy: 330 },
+    { id: '#co2', n: '03  NAILS', k: COPY.ben[2], tx: 815, ty: 1200, cx: 880, cy: 760 },
   ];
   CALL.forEach(c => {
     const root = $(c.id);
@@ -345,7 +346,7 @@
 
   // S1 · the mirror (0 – 2.4)
   tl.fromTo(arch, { s: 0.94 }, { s: 1.0, duration: 1.6, ease: 'power2.out' }, 0);
-  tl.fromTo('#shotA', { scale: 1.0, x: 105, y: 90 }, { scale: 1.07, x: 112, y: 96, duration: 2.6, ease: 'none' }, 0);   // mirrored face ≈ (435,990) → centre of the arch
+  tl.fromTo('#shotA', { scale: 1.0, x: -10, y: 355 }, { scale: 1.07, x: -10, y: 380, duration: 2.6, ease: 'none' }, 0);   // mirrored eyes ≈ (550,700) → eye line of the arch (540,1055)
   tl.fromTo('#archShadow', { opacity: 0 }, { opacity: 1, duration: .6 }, 0);
   gsap.set('#bug', { opacity: .92 });
   tl.fromTo('#hook', { y: 10 }, { y: 0, duration: 2.0, ease: 'power1.out' }, 0);
@@ -367,7 +368,7 @@
   tl.set(arch, { on: 0 }, 2.9);
 
   // S3 · reality: the hair, the turn (2.4 – 7.4)
-  tl.fromTo('#shotB', { scale: 1.0, transformOrigin: '520px 900px' }, { scale: 1.075, duration: 5.2, ease: 'none' }, 2.2);
+  tl.fromTo('#shotB', { scale: 1.0, transformOrigin: '500px 600px' }, { scale: 1.075, duration: 5.2, ease: 'none' }, 2.2);
   tl.to('#fvig', { opacity: 1, duration: .6 }, 2.6);
   tl.to('#bug', { opacity: .9, duration: .5 }, 3.0);
   tl.to('#thesis .eyebrow', { opacity: .9, y: 0, filter: 'blur(0px)', duration: .7, ease: E3 }, 4.45);
@@ -378,9 +379,9 @@
   // S4 · hair / skin / nails, cut on the beat (7.4, 8.9, 10.4)
   const cuts = [['#shotB', '#shotC', 7.4], ['#shotC', '#shotD', 8.9], ['#shotD', '#shotE', 10.4]];
   cuts.forEach(([a, b, t]) => { tl.set(a, { opacity: 0 }, t); tl.set(b, { opacity: 1 }, t); });
-  tl.fromTo('#shotC', { scale: 1.02, transformOrigin: '600px 820px' }, { scale: 1.08, duration: 1.5, ease: 'none' }, 7.4);
-  tl.fromTo('#shotD', { scale: 1.07, transformOrigin: '430px 1060px' }, { scale: 1.13, duration: 1.5, ease: 'none' }, 8.9);
-  tl.fromTo('#shotE', { scale: 1.03, transformOrigin: '520px 980px' }, { scale: 1.10, duration: 2.4, ease: 'none' }, 10.4);
+  tl.fromTo('#shotC', { scale: 1.02, transformOrigin: '540px 820px' }, { scale: 1.08, duration: 1.5, ease: 'none' }, 7.4);
+  tl.fromTo('#shotD', { scale: 1.07, transformOrigin: '800px 980px' }, { scale: 1.13, duration: 1.5, ease: 'none' }, 8.9);
+  tl.fromTo('#shotE', { scale: 1.03, transformOrigin: '540px 950px' }, { scale: 1.10, duration: 2.4, ease: 'none' }, 10.4);
   CALL.forEach((c, i) => {
     const t0 = 7.52 + i * 1.5, root = $(c.id);
     tl.to(root.querySelector('.ring'), { scale: 1, opacity: 1, duration: .45, ease: 'back.out(2.2)' }, t0);

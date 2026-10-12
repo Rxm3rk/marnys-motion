@@ -21,16 +21,15 @@ Sources:
 - https://www.cphi-online.com/product/beauty-in-out-elixir/
 
 ## Footage (Pexels licence: free commercial use, editing allowed, no attribution required; do not imply endorsement by people shown)
-Creator: khezez | خزاز — https://www.pexels.com/@khezez/
+Creator: Artem Podrez — https://www.pexels.com/@artempodrez/ (one studio shoot, same model; 2160×3840 30p, played at 25 fps)
 
 | Clip | Use | Pexels page |
 |---|---|---|
-| 35088445 | hazy "mirror" world (hook) | https://www.pexels.com/video/35088445/ |
-| 35088444 | back of hair → turn → face | https://www.pexels.com/video/35088444/ |
-| 35088462 | hair flip | https://www.pexels.com/video/35088462/ |
-| 35088447 | skin and nail close-ups | https://www.pexels.com/video/35088447/ |
-| 35088453 | over-shoulder, hand on chin | https://www.pexels.com/video/35088453/ |
-| 35088449 | haze passing / clearing (spare) | https://www.pexels.com/video/35088449/ |
+| 7957707 | face to camera, "mirror" world (hook, haze added in the grade) | https://www.pexels.com/video/woman-looking-at-the-camera-7957707/ |
+| 7957700 | back of her glossy hair (reality) | https://www.pexels.com/video/flawless-skin-of-a-woman-7957700/ |
+| 7957703 | face to camera under the thesis; hand with red nails on her shoulder | https://www.pexels.com/video/pretty-model-wearing-a-black-top-7957703/ |
+| 7957699 | hair in the air | https://www.pexels.com/video/woman-posing-for-a-shoot-7957699/ |
+| 7957697 | skin close-up | https://www.pexels.com/video/woman-looking-sideways-7957697/ |
 
 ## Brand
 - Logo: `Downloads/logo-marnys-cphi.webp` (white on navy).
