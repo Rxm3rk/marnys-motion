@@ -1,0 +1,495 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MARNYS · Beauty In & Out · Mirror vs Reality</title>
+<!--
+  MARNYS Iraq · Beauty In & Out Elixir · "Mirror vs Reality" reel (1080×1920).
+  Deterministic: every visual state is a function of timeline time. window.__seek(t) seeks the GSAP
+  timeline, swaps footage frames (graded JPEG caches, 25 fps source) and recomputes the arch geometry.
+  ?lang=ku (default) or ?lang=ar.
+-->
+<style>
+  @font-face { font-family: Somar; src: url('fonts/UniSIRWAN Somar Regular.ttf'); font-weight: 400; }
+  @font-face { font-family: Somar; src: url('fonts/UniSIRWAN Somar Medium.ttf'); font-weight: 500; }
+  @font-face { font-family: Somar; src: url('fonts/UniSIRWAN Somar Black.ttf'); font-weight: 900; }
+  @font-face { font-family: Inter; src: url('fonts/InterTight-400.ttf'); font-weight: 400; }
+  @font-face { font-family: Inter; src: url('fonts/InterTight-500.ttf'); font-weight: 500; }
+  @font-face { font-family: Inter; src: url('fonts/InterTight-600.ttf'); font-weight: 600; }
+  @font-face { font-family: Inter; src: url('fonts/InterTight-700.ttf'); font-weight: 700; }
+
+  :root {
+    --navy: #0E2A47; --navy2: #0B4F71; --deep: #071A2E;
+    --cream: #F5F1E9; --ice: #DDE7EE; --blue: #7FAFC8; --sky: #A9C7D6; --gold: #C9A04B;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+
+  #bg { background: radial-gradient(115% 62% at 50% 46%, #FCFAF5 0%, #F4EFE6 52%, #E7DFD0 100%); }
+
+  /* footage window: clipped to the arch while the mirror is on screen */
+  .shot { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; opacity: 0; }
+  .shot img { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; display: block; }
+  #shotA .fill { position: absolute; left: -540px; top: -960px; width: 2160px; height: 3840px; background: url('assets/hazy_fill.jpg') center / cover; }   /* pre-blurred edge cover for the push */
+  #shotA .main { transform: scaleX(-1); }
+  #glass { opacity: 0; background:
+      linear-gradient(160deg, rgba(255,255,255,.38) 0%, rgba(255,255,255,.06) 32%, rgba(255,255,255,0) 52%, rgba(255,255,255,.08) 100%); }
+  #fvig { background: radial-gradient(90% 60% at 50% 45%, rgba(0,0,0,0) 55%, rgba(4,14,26,.30) 100%); opacity: 0; }
+
+  /* type */
+  .ku { font-family: Somar, sans-serif; direction: rtl; unicode-bidi: isolate; }
+  .lat { font-family: Inter, sans-serif; direction: ltr; }
+  .line { display: block; white-space: nowrap; }
+  .block { position: absolute; left: 0; width: 1080px; text-align: center; }
+
+  #hook { top: 262px; color: var(--navy); }
+  #hook .l1 { font-weight: 500; font-size: 86px; line-height: 118px; }
+  #hook .l2 { font-weight: 500; font-size: 86px; line-height: 118px; }
+  #hook em { font-style: normal; font-weight: 900; position: relative; display: inline-block; }
+  #hook em .ul { position: absolute; left: 4%; right: 4%; bottom: -6px; height: 5px; border-radius: 3px; background: var(--blue); transform-origin: 100% 50%; transform: scaleX(0); }
+
+  #thesis { top: 1262px; color: #fff; text-shadow: 0 2px 30px rgba(0,0,0,.35); }
+  #thesis .eyebrow { font-weight: 600; font-size: 28px; letter-spacing: .42em; margin-right: -.42em; opacity: .9; height: 54px; }
+  #thesis .l1 { font-weight: 900; font-size: 92px; line-height: 120px; }
+  #thesis .l2 { font-weight: 500; font-size: 78px; line-height: 104px; opacity: .96; }
+
+  /* callouts */
+  #callouts { pointer-events: none; }
+  .nocall #callouts { display: none; }
+  .co .pill { position: absolute; display: flex; align-items: center; gap: 18px; padding: 16px 30px 18px 26px; border-radius: 999px;
+    background: rgba(9, 30, 52, .52); border: 1.5px solid rgba(255,255,255,.55);
+    backdrop-filter: blur(16px) saturate(1.15); -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    color: #fff; box-shadow: 0 10px 40px rgba(0,0,0,.18); white-space: nowrap; }
+  .co .pill .k { font-weight: 500; font-size: 54px; line-height: 62px; }
+  .co .pill .n { font-family: Inter; font-weight: 600; font-size: 20px; letter-spacing: .24em; opacity: .78; padding-top: 4px; }
+  .co .pill .sep { width: 1.5px; height: 34px; background: rgba(255,255,255,.45); }
+
+  /* product */
+  #product { opacity: 0; }
+  #niche { opacity: 0; }
+  #prodText { top: 716px; color: var(--navy); }
+  #prodText .num { font-family: Inter; font-weight: 600; font-size: 132px; line-height: 150px; letter-spacing: -.02em; direction: ltr; }
+  #prodText .num small { font-size: 54px; font-weight: 500; letter-spacing: 0; margin-left: 10px; }
+  #prodText .p1 { font-weight: 500; font-size: 48px; line-height: 72px; }
+  #prodText .p2 { font-weight: 400; font-size: 33px; line-height: 56px; opacity: .72; }
+  #legal { top: 1640px; color: var(--navy); font-weight: 400; font-size: 26px; opacity: 0; }
+  #prodLabel { top: 404px; color: var(--navy); }
+  #prodLabel .a { font-weight: 600; font-size: 34px; letter-spacing: .34em; margin-right: -.34em; line-height: 48px; }
+  #prodLabel .b { font-weight: 500; font-size: 22px; letter-spacing: .62em; margin-right: -.62em; line-height: 40px; color: var(--gold); }
+  .pimg { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; }
+  #box { filter: drop-shadow(0 18px 26px rgba(60,40,10,.22)) drop-shadow(0 2px 3px rgba(40,30,10,.25)); }
+  #vial { filter: drop-shadow(0 16px 22px rgba(60,40,10,.26)) drop-shadow(0 1px 2px rgba(40,30,10,.3)); }
+  .refl { position: absolute; left: 0; top: 0; transform-origin: 50% 0%; opacity: .14;
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0) 30%); mask-image: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0) 30%); }
+  .cshadow { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(40,28,10,.42), rgba(40,28,10,0)); }
+  .mote { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,226,150,.95), rgba(255,210,120,0)); }
+
+  /* end card */
+  #end { opacity: 1; }
+  #endPanel { background: radial-gradient(90% 55% at 50% 46%, #134A70 0%, #0E2F51 45%, #081D33 100%); }
+  #cta { top: 860px; color: #fff; }
+  #cta .l1 { font-weight: 900; font-size: 86px; line-height: 116px; }
+  #cta .l2 { font-weight: 500; font-size: 72px; line-height: 100px; opacity: .95; }
+  #prodName { top: 1112px; color: var(--sky); font-weight: 500; font-size: 27px; letter-spacing: .3em; margin-right: -.3em; }
+  #endLogo { left: 290px; top: 1240px; width: 500px; height: 85px; }
+  #endTag { left: 390px; top: 1346px; width: 300px; height: 62px; }
+
+  .mask-logo { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+  #bug { left: 411px; top: 132px; width: 258px; height: 44px; -webkit-mask-image: url('assets/logo_bug.png'); mask-image: url('assets/logo_bug.png'); background: var(--navy); opacity: 0; }
+  #endLogo { -webkit-mask-image: url('assets/logo_end.png'); mask-image: url('assets/logo_end.png'); background: #fff; }
+  #endTag { -webkit-mask-image: url('assets/tagline_end.png'); mask-image: url('assets/tagline_end.png'); background: #fff; }
+
+  #flash { background: radial-gradient(70% 45% at 50% 52%, rgba(255,255,255,1), rgba(255,255,255,.75) 60%, rgba(255,255,255,.4)); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="full"></div>
+
+  <!-- footage, clipped by the arch -->
+  <div id="foot" class="full">
+    <div id="shotA" class="shot"><div class="fill"></div><img class="main" alt=""></div>
+    <div id="shotB" class="shot"><img alt=""></div>
+    <div id="shotC" class="shot"><img alt=""></div>
+    <div id="shotD" class="shot"><img alt=""></div>
+    <div id="shotE" class="shot"><img alt=""></div>
+    <div id="fvig" class="full"></div>
+    <div id="glass" class="full"></div>
+  </div>
+
+  <!-- product niche (inside the same arch) -->
+  <div id="product" class="full">
+    <div id="niche" class="full"></div>
+    <div id="motes" class="full"></div>
+    <div id="prodWrap" class="abs" style="left:0;top:0;width:1080px;height:1920px">
+    <div id="boxGroup" class="abs" style="left:0;top:0">
+      <div id="boxShadow" class="cshadow"></div>
+      <img id="box" class="pimg" src="assets/elixir_box.png" alt="">
+      <div id="boxSweep" class="abs"></div>
+    </div>
+    </div>
+  </div>
+
+  <!-- the mirror: arch outline, glass glint -->
+  <svg id="arch" class="full" viewBox="0 0 1080 1920" width="1080" height="1920">
+    <defs>
+      <clipPath id="archClip"><path id="archClipPath" d=""/></clipPath>
+      <linearGradient id="glintGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#fff" stop-opacity=".0"/>
+        <stop offset=".5" stop-color="#fff" stop-opacity=".55"/>
+        <stop offset=".56" stop-color="#fff" stop-opacity=".0"/>
+        <stop offset=".72" stop-color="#fff" stop-opacity=".18"/>
+        <stop offset=".76" stop-color="#fff" stop-opacity="0"/>
+        <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter>
+    </defs>
+    <path id="archShadow" d="" fill="none" stroke="rgba(14,42,71,.16)" stroke-width="26" filter="url(#soft)" opacity="0"/>
+    <g clip-path="url(#archClip)"><rect id="glint" x="-700" y="0" width="1400" height="1920" fill="url(#glintGrad)" opacity="0"/></g>
+    <path id="archOuter" d="" fill="none" stroke="#0E2A47" stroke-width="3"/>
+    <path id="archInner" d="" fill="none" stroke="#0E2A47" stroke-width="1.4" opacity=".55"/>
+  </svg>
+
+  <!-- the vial stands in front of the mirror frame -->
+  <div id="prodFront" class="full" style="opacity:0">
+  <div id="prodWrap2" class="abs" style="left:0;top:0;width:1080px;height:1920px">
+    <div id="vialGroup" class="abs" style="left:0;top:0">
+      <div id="vialShadow" class="cshadow"></div>
+      <img id="vialRefl" class="refl" src="assets/elixir_vial.png" alt="">
+      <img id="vial" class="pimg" src="assets/elixir_vial.png" alt="">
+      <div id="vialSweep" class="abs"></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- copy -->
+  <div id="hook" class="block ku"><span class="line l1"></span><span class="line l2"></span></div>
+  <div id="thesis" class="block"><span class="line eyebrow lat">BEAUTY IN &amp; OUT</span><span class="line l1 ku"></span><span class="line l2 ku"></span></div>
+
+  <div id="callouts" class="full">
+    <div class="co" id="co0"><svg class="full" viewBox="0 0 1080 1920"><path class="lead" fill="none" stroke="#fff" stroke-width="2.2"/><circle class="halo" r="34" fill="none" stroke="#fff" stroke-width="1.5"/><circle class="ring" r="17" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2.5"/><circle class="dot" r="5.5" fill="#fff"/></svg><div class="pill"><span class="n lat"></span><span class="sep"></span><span class="k ku"></span></div></div>
+    <div class="co" id="co1"><svg class="full" viewBox="0 0 1080 1920"><path class="lead" fill="none" stroke="#fff" stroke-width="2.2"/><circle class="halo" r="34" fill="none" stroke="#fff" stroke-width="1.5"/><circle class="ring" r="17" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2.5"/><circle class="dot" r="5.5" fill="#fff"/></svg><div class="pill"><span class="n lat"></span><span class="sep"></span><span class="k ku"></span></div></div>
+    <div class="co" id="co2"><svg class="full" viewBox="0 0 1080 1920"><path class="lead" fill="none" stroke="#fff" stroke-width="2.2"/><circle class="halo" r="34" fill="none" stroke="#fff" stroke-width="1.5"/><circle class="ring" r="17" fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2.5"/><circle class="dot" r="5.5" fill="#fff"/></svg><div class="pill"><span class="n lat"></span><span class="sep"></span><span class="k ku"></span></div></div>
+  </div>
+
+  <div id="prodText" class="block"><span class="line num"><span id="numVal">5,000</span><small>mg</small></span><span class="line p1 ku"></span><span class="line p2 ku"></span></div>
+  <div id="legal" class="block ku"></div>
+  <div id="prodLabel" class="block lat"><span class="line a">BEAUTY IN &amp; OUT</span><span class="line b">ELIXIR</span></div>
+
+  <!-- end card -->
+  <div id="end" class="full">
+    <div id="endPanel" class="full"></div>
+    <svg id="endArch" class="full" viewBox="0 0 1080 1920"><defs><clipPath id="endClip"><path id="endClipPath" d=""/></clipPath></defs><g clip-path="url(#endClip)"><rect id="endGlint" x="-1500" y="0" width="1400" height="1920" fill="url(#glintGrad)" opacity=".55"/></g><path id="endArchOuter" d="" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.5"/><path id="endArchInner" d="" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.2"/></svg>
+    <div id="cta" class="block ku"><span class="line l1"></span><span class="line l2"></span></div>
+    <div id="prodName" class="block lat">BEAUTY IN &amp; OUT ELIXIR</div>
+    <div id="endLogo" class="abs mask-logo"></div>
+    <div id="endTag" class="abs mask-logo"></div>
+  </div>
+
+  <div id="bug" class="abs mask-logo"></div>
+  <div id="flash" class="full"></div>
+</div>
+
+<script src="vendor/gsap.min.js"></script>
+<script>
+(() => {
+  const Q = new URLSearchParams(location.search);
+  const LANG = Q.get('lang') || 'ku';
+  if (Q.get('nocallouts')) document.documentElement.classList.add('nocall');
+  const COPY = {
+    ku: {
+      hook1: 'ئاوێنە تەنها', hook2: '<em>ڕووکار<i class="ul"></i></em> نیشان دەدات',
+      th1: 'جوانی لە ناوەوە', th2: 'دەست پێدەکات',
+      ben: ['قژ', 'پێست', 'نینۆک'],
+      p1: 'کۆلاجین لە هەر شووشەیەکدا', p2: '+ ئەسیدی هایالورۆنیک + ڤیتامینەکان',
+      legal: 'تەواوکەری خۆراکی',
+      cta1: 'ڕۆتینی جوانیت', cta2: 'لە ئاوێنەدا ناوەستێت',
+    },
+    ar: {
+      hook1: 'المرآة لا تُظهر', hook2: 'إلّا <em>السطح<i class="ul"></i></em>',
+      th1: 'الجمال يبدأ', th2: 'من الداخل',
+      ben: ['الشعر', 'البشرة', 'الأظافر'],
+      p1: 'كولاجين في كل قنينة', p2: '+ حمض الهيالورونيك + فيتامينات',
+      legal: 'مكمّل غذائي',
+      cta1: 'روتين جمالكِ', cta2: 'لا يتوقف عند المرآة',
+    },
+  }[LANG];
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  if (LANG === 'ar') document.documentElement.lang = 'ar'; else document.documentElement.lang = 'ckb';
+  $('#hook .l1').innerHTML = COPY.hook1; $('#hook .l2').innerHTML = COPY.hook2;
+  $('#thesis .l1').textContent = COPY.th1; $('#thesis .l2').textContent = COPY.th2;
+  $('#prodText .p1').textContent = COPY.p1; $('#prodText .p2').textContent = COPY.p2;
+  $('#legal').textContent = COPY.legal;
+  $('#cta .l1').textContent = COPY.cta1; $('#cta .l2').textContent = COPY.cta2;
+
+  // ---------- footage ----------
+  const FPS_SRC = 25;
+  const SHOTS = {
+    A: { el: $('#shotA'), imgs: $$('#shotA img.main'), start: 0.80, n: 90,  map: t => t + 1.0 },   // 35088445 hazy, mirrored
+    B: { el: $('#shotB'), imgs: $$('#shotB img'), start: 5.00, n: 150, map: t => t + 3.2 },   // 35088444 hair → turn
+    C: { el: $('#shotC'), imgs: $$('#shotC img'), start: 8.80, n: 48,  map: t => t + 1.5 },   // 35088462 hair toss
+    D: { el: $('#shotD'), imgs: $$('#shotD img'), start: 1.20, n: 48,  map: t => t - 7.6 },   // 35088447 skin
+    E: { el: $('#shotE'), imgs: $$('#shotE img'), start: 18.28, n: 70, map: t => t + 8.0 },   // 35088453 hand / nails
+  };
+  const frameUrl = (k, i) => `work/frames/${k}/${String(i).padStart(4, '0')}.jpg`;
+  function frameIndex(s, t) {
+    const src = s.map(t);
+    return Math.min(s.n, Math.max(1, Math.floor((src - s.start) * FPS_SRC + 1e-4) + 1));
+  }
+
+  // ---------- arch geometry ----------
+  const ARCH = { cx: 540, apex: 600, w: 700, bottom: 1700 };
+  const arch = { s: 1, px: 540, py: 1080, on: 1, draw: 1 };   // tweened proxy
+  function archPath(s, px, py, inset = 0) {
+    const r = ARCH.w / 2 - inset;
+    const T = (x, y) => [px + (x - px) * s, py + (y - py) * s];
+    const L = ARCH.cx - r, R = ARCH.cx + r, top = ARCH.apex + inset, yc = top + r, bot = ARCH.bottom - inset;
+    const [x1, y1] = T(L, bot), [x2, y2] = T(L, yc), [x3, y3] = T(R, yc), [x4, y4] = T(R, bot);
+    const rr = r * s;
+    return `M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)} A${rr.toFixed(2)} ${rr.toFixed(2)} 0 0 1 ${x3.toFixed(2)} ${y3.toFixed(2)} L${x4.toFixed(2)} ${y4.toFixed(2)} Z`;
+  }
+  const archLen = (inset = 0) => { const r = ARCH.w / 2 - inset; return Math.PI * r + 2 * (ARCH.bottom - ARCH.apex - r - inset) + 2 * r; };
+
+  // end-card navy panel: a giant arch rising from below
+  const endRise = { y: 2100 };
+  function riserPath(topY) {
+    const w = 2400, r = w / 2, cx = 540;
+    return `path('M${cx - r} 4000 L${cx - r} ${topY + r} A${r} ${r} 0 0 1 ${cx + r} ${topY + r} L${cx + r} 4000 Z')`;
+  }
+
+  // ---------- product layout ----------
+  const BOX = { w: 943, h: 737, scale: 0.625 }, VIAL = { w: 196, h: 969, scale: 0.64 };
+  const boxW = BOX.w * BOX.scale, boxH = BOX.h * BOX.scale, vialW = VIAL.w * VIAL.scale, vialH = VIAL.h * VIAL.scale;
+  const boxX = 492 - boxW / 2, boxBottom = 1572, vialX = 852 - vialW / 2, vialBottom = 1642;
+  Object.assign($('#box').style, { width: boxW + 'px', height: boxH + 'px', left: boxX + 'px', top: (boxBottom - boxH) + 'px' });
+  { // contact shadow follows the slanted front edge of the box: source (90,728) → (930,606)
+    const bx0 = boxX + 60 * BOX.scale, by0 = boxBottom - boxH + 731 * BOX.scale, bx1 = boxX + 930 * BOX.scale, by1 = boxBottom - boxH + 606 * BOX.scale;
+    const len = Math.hypot(bx1 - bx0, by1 - by0), ang = Math.atan2(by1 - by0, bx1 - bx0) * 180 / Math.PI;
+    Object.assign($('#boxShadow').style, { width: (len * 1.08) + 'px', height: '58px', left: ((bx0 + bx1) / 2 - len * 0.54) + 'px', top: ((by0 + by1) / 2 - 26) + 'px', transform: `rotate(${ang.toFixed(2)}deg)` });
+  }
+  Object.assign($('#vial').style, { width: vialW + 'px', height: vialH + 'px', left: vialX + 'px', top: (vialBottom - vialH) + 'px' });
+  Object.assign($('#vialRefl').style, { width: vialW + 'px', height: vialH + 'px', left: vialX + 'px', top: vialBottom + 'px', transform: 'scaleY(-1) translateY(-100%)', transformOrigin: '50% 0%' });
+  Object.assign($('#vialShadow').style, { width: vialW * 1.7 + 'px', height: '46px', left: (vialX - vialW * 0.35) + 'px', top: (vialBottom - 26) + 'px' });
+  // light sweep across the vial, masked to the vial silhouette
+  Object.assign($('#vialSweep').style, { width: vialW + 'px', height: vialH + 'px', left: vialX + 'px', top: (vialBottom - vialH) + 'px',
+    WebkitMaskImage: "url('assets/elixir_vial.png')", maskImage: "url('assets/elixir_vial.png')", WebkitMaskSize: '100% 100%', maskSize: '100% 100%',
+    background: 'linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,.75) 50%, rgba(255,255,255,0) 60%, rgba(255,255,255,0) 100%)',
+    backgroundSize: '300% 100%', backgroundPosition: '100% 0', mixBlendMode: 'screen' });
+
+  Object.assign($('#boxSweep').style, { width: boxW + 'px', height: boxH + 'px', left: boxX + 'px', top: (boxBottom - boxH) + 'px',
+    WebkitMaskImage: "url('assets/elixir_box.png')", maskImage: "url('assets/elixir_box.png')", WebkitMaskSize: '100% 100%', maskSize: '100% 100%',
+    background: 'linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 42%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 58%, rgba(255,255,255,0) 100%)',
+    backgroundSize: '300% 100%', backgroundPosition: '100% 0', mixBlendMode: 'screen' });
+
+  // gold motes inside the niche (seeded, deterministic drift)
+  const motes = [];
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 26; i++) {
+    const d = document.createElement('div'); d.className = 'mote';
+    const size = 6 + rnd() * 16;
+    Object.assign(d.style, { width: size + 'px', height: size + 'px' });
+    $('#motes').appendChild(d);
+    motes.push({ el: d, x: 230 + rnd() * 620, y: 760 + rnd() * 900, vy: 18 + rnd() * 40, amp: 6 + rnd() * 16, ph: rnd() * 6.28, a: 0.25 + rnd() * 0.6, size });
+  }
+
+  // ---------- callouts ----------
+  const CALL = [   // target (tx,ty) on the subject, pill centre (cx,cy)
+    { id: '#co0', n: '01  HAIR',  k: COPY.ben[0], tx: 706, ty: 1088, cx: 706, cy: 600 },
+    { id: '#co1', n: '02  SKIN',  k: COPY.ben[1], tx: 702, ty: 968,  cx: 812, cy: 560 },
+    { id: '#co2', n: '03  NAILS', k: COPY.ben[2], tx: 488, ty: 1214, cx: 250, cy: 900 },
+  ];
+  CALL.forEach(c => {
+    const root = $(c.id);
+    root.querySelector('.n').textContent = c.n; root.querySelector('.k').textContent = c.k;
+    for (const sel of ['.halo', '.ring', '.dot']) { const e = root.querySelector(sel); e.setAttribute('cx', c.tx); e.setAttribute('cy', c.ty); }
+  });
+  function wireCallout(c) {   // centre the pill, then run a straight leader from the ring to the pill edge that faces it
+    const root = $(c.id), pill = root.querySelector('.pill');
+    const W = pill.offsetWidth, H = pill.offsetHeight;
+    pill.style.left = (c.cx - W / 2) + 'px'; pill.style.top = (c.cy - H / 2) + 'px';
+    const dx = c.tx - c.cx, dy = c.ty - c.cy;
+    const [ex, ey] = Math.abs(dx) / (W / 2) > Math.abs(dy) / (H / 2) ? [c.cx + Math.sign(dx) * W / 2, c.cy] : [c.cx, c.cy + Math.sign(dy) * H / 2];
+    const L = Math.hypot(ex - c.tx, ey - c.ty), sx = c.tx + (ex - c.tx) / L * 19, sy = c.ty + (ey - c.ty) / L * 19;   // start at the ring edge
+    const lead = root.querySelector('.lead'); lead.setAttribute('d', `M${sx.toFixed(1)} ${sy.toFixed(1)} L${ex.toFixed(1)} ${ey.toFixed(1)}`);
+    const len = lead.getTotalLength(); lead.style.strokeDasharray = len; lead.style.strokeDashoffset = len; c.len = len;
+    gsap.set(pill, { transformOrigin: `${(ex - (c.cx - W / 2)).toFixed(1)}px ${(ey - (c.cy - H / 2)).toFixed(1)}px` });
+  }
+
+  // ---------- timeline ----------
+  const tl = gsap.timeline({ paused: true });
+  const DUR = 18.4;   // ends on the music phrase (track 48.0 s)
+  window.__dur = DUR;
+  const E3 = 'power3.out', E2i = 'power2.in';
+
+  // initial states
+  gsap.set('#shotA', { opacity: 1 });
+  gsap.set('#shotA', { transformOrigin: '540px 1080px', x: 0, y: 0, scale: 1.0 });
+  gsap.set('#glass', { opacity: .55 });
+  gsap.set(['#thesis .line'], { opacity: 0, y: 28, filter: 'blur(10px)' });
+  gsap.set(['#thesis .l1', '#thesis .l2'], { clipPath: 'inset(0% 0% 0% 100%)' });
+  gsap.set(['#prodText .line', '#cta .line'], { opacity: 0, y: 26, filter: 'blur(10px)' });
+  gsap.set(['#prodText .p1', '#prodText .p2', '#cta .line'], { clipPath: 'inset(0% 0% 0% 100%)' });
+  gsap.set(['#prodName', '#endLogo', '#endTag'], { opacity: 0, y: 18 });
+  gsap.set('#prodLabel .line', { opacity: 0, y: 16, filter: 'blur(6px)' });
+  gsap.set('#end', { opacity: 0 });
+  CALL.forEach(c => {
+    const root = $(c.id);
+    gsap.set(root.querySelectorAll('.ring, .dot, .halo'), { scale: 0, opacity: 0, svgOrigin: `${c.tx} ${c.ty}` });
+    gsap.set(root.querySelector('.pill'), { opacity: 0, scale: .82 });
+  });
+
+  // S1 · the mirror (0 – 2.4)
+  tl.fromTo(arch, { s: 0.94 }, { s: 1.0, duration: 1.6, ease: 'power2.out' }, 0);
+  tl.fromTo('#shotA', { scale: 1.0, x: 105, y: 90 }, { scale: 1.07, x: 112, y: 96, duration: 2.6, ease: 'none' }, 0);   // mirrored face ≈ (435,990) → centre of the arch
+  tl.fromTo('#archShadow', { opacity: 0 }, { opacity: 1, duration: .6 }, 0);
+  gsap.set('#bug', { opacity: .92 });
+  tl.fromTo('#hook', { y: 10 }, { y: 0, duration: 2.0, ease: 'power1.out' }, 0);
+  tl.to('#hook em .ul', { scaleX: 1, duration: .7, ease: 'power3.out' }, 0.45);
+  tl.fromTo('#glint', { attr: { x: -1500 }, opacity: 1 }, { attr: { x: 400 }, duration: 1.0, ease: 'power2.inOut' }, 0.95);
+
+  // S2 · push through the glass (2.05 – 2.9); music drop at 2.4
+  tl.to(['#hook .l1', '#hook .l2'], { opacity: 0, y: -34, filter: 'blur(10px)', duration: .32, ease: E2i, stagger: .05 }, 2.02);
+  tl.to('#bug', { opacity: 0, duration: .25 }, 2.05);
+  tl.to(arch, { s: 4.6, duration: .85, ease: 'expo.inOut' }, 2.02);
+  tl.to(['#archOuter', '#archInner', '#archShadow'], { opacity: 0, duration: .3, ease: 'power1.in' }, 2.28);
+  tl.to('#glass', { opacity: 0, duration: .35 }, 2.2);
+  tl.set('#shotB', { opacity: 0, filter: 'blur(22px)' }, 0);
+  tl.to('#shotB', { opacity: 1, duration: .32, ease: 'power1.inOut' }, 2.22);
+  tl.to('#shotB', { filter: 'blur(0px)', duration: .7, ease: 'power2.out' }, 2.3);
+  tl.to('#shotA', { opacity: 0, duration: .3, ease: 'power1.in' }, 2.35);
+  tl.fromTo('#flash', { opacity: 0 }, { opacity: .42, duration: .14, ease: 'power1.in' }, 2.28);
+  tl.to('#flash', { opacity: 0, duration: .45, ease: 'power2.out' }, 2.42);
+  tl.set(arch, { on: 0 }, 2.9);
+
+  // S3 · reality: the hair, the turn (2.4 – 7.4)
+  tl.fromTo('#shotB', { scale: 1.0, transformOrigin: '520px 900px' }, { scale: 1.075, duration: 5.2, ease: 'none' }, 2.2);
+  tl.to('#fvig', { opacity: 1, duration: .6 }, 2.6);
+  tl.to('#bug', { opacity: .9, duration: .5 }, 3.0);
+  tl.to('#thesis .eyebrow', { opacity: .9, y: 0, filter: 'blur(0px)', duration: .7, ease: E3 }, 4.45);
+  tl.to('#thesis .l1', { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .85, ease: E3 }, 4.6);
+  tl.to('#thesis .l2', { opacity: .96, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .85, ease: E3 }, 4.8);
+  tl.to('#thesis .line', { opacity: 0, y: -26, filter: 'blur(10px)', duration: .3, ease: E2i, stagger: .04 }, 7.0);
+
+  // S4 · hair / skin / nails, cut on the beat (7.4, 8.9, 10.4)
+  const cuts = [['#shotB', '#shotC', 7.4], ['#shotC', '#shotD', 8.9], ['#shotD', '#shotE', 10.4]];
+  cuts.forEach(([a, b, t]) => { tl.set(a, { opacity: 0 }, t); tl.set(b, { opacity: 1 }, t); });
+  tl.fromTo('#shotC', { scale: 1.02, transformOrigin: '600px 820px' }, { scale: 1.08, duration: 1.5, ease: 'none' }, 7.4);
+  tl.fromTo('#shotD', { scale: 1.07, transformOrigin: '430px 1060px' }, { scale: 1.13, duration: 1.5, ease: 'none' }, 8.9);
+  tl.fromTo('#shotE', { scale: 1.03, transformOrigin: '520px 980px' }, { scale: 1.10, duration: 2.4, ease: 'none' }, 10.4);
+  CALL.forEach((c, i) => {
+    const t0 = 7.52 + i * 1.5, root = $(c.id);
+    tl.to(root.querySelector('.ring'), { scale: 1, opacity: 1, duration: .45, ease: 'back.out(2.2)' }, t0);
+    tl.to(root.querySelector('.dot'), { scale: 1, opacity: 1, duration: .3, ease: 'power2.out' }, t0 + .05);
+    tl.fromTo(root.querySelector('.halo'), { scale: .5, opacity: .9 }, { scale: 1.9, opacity: 0, duration: .9, ease: 'power2.out', immediateRender: false }, t0 + .08);
+    tl.to(root.querySelector('.lead'), { strokeDashoffset: 0, duration: .42, ease: 'power2.inOut' }, t0 + .12);
+    tl.to(root.querySelector('.pill'), { opacity: 1, scale: 1, duration: .5, ease: 'back.out(1.7)' }, t0 + .36);
+    tl.to([root.querySelector('.pill'), root.querySelector('.ring'), root.querySelector('.dot'), root.querySelector('.lead')], { opacity: 0, duration: .2, ease: 'power1.in' }, t0 + 1.2);
+  });
+
+  // S5 · the mirror returns and closes around her (11.65 – 12.4)
+  tl.set(arch, { on: 1, s: 4.6, px: 540, py: 1080 }, 11.6);
+  tl.set(['#archOuter', '#archInner'], { opacity: 0 }, 11.6);
+  tl.to(arch, { s: 1, duration: .75, ease: 'expo.inOut' }, 11.62);
+  tl.to(['#archOuter', '#archInner'], { opacity: 1, duration: .35 }, 12.0);
+  tl.to('#archShadow', { opacity: 1, duration: .4 }, 12.05);
+  tl.to('#bug', { opacity: 0, duration: .25 }, 11.6);
+  tl.to('#fvig', { opacity: 0, duration: .4 }, 11.9);
+
+  // S6 · product inside the mirror (12.3 – 15.4)
+  tl.set(['#product', '#prodFront'], { opacity: 1 }, 12.2);
+  tl.fromTo('#niche', { opacity: 0 }, { opacity: 1, duration: .45, ease: 'power1.inOut' }, 12.25);
+  tl.to('#shotE', { opacity: 0, duration: .3, ease: 'power1.in' }, 12.26);
+  tl.to('#bug', { opacity: .92, duration: .4 }, 12.5);
+  tl.fromTo('#boxGroup', { y: 170, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .85, ease: 'power3.out' }, 12.46);
+  tl.fromTo('#vialGroup', { x: 190, y: 40, rotation: 10, opacity: 0, transformOrigin: '852px 1642px' }, { x: 0, y: 0, rotation: 0, opacity: 1, duration: .9, ease: 'power3.out' }, 12.68);
+  tl.fromTo(['#prodWrap', '#prodWrap2'], { scale: 1.0, transformOrigin: '540px 1560px' }, { scale: 1.035, duration: 2.9, ease: 'none' }, 12.4);
+  tl.fromTo('#boxSweep', { backgroundPosition: '100% 0' }, { backgroundPosition: '0% 0', duration: .9, ease: 'power2.inOut', immediateRender: false }, 13.55);
+  tl.fromTo('#vialSweep', { backgroundPosition: '100% 0' }, { backgroundPosition: '0% 0', duration: .8, ease: 'power2.inOut', immediateRender: false }, 13.35);
+  tl.fromTo('#glint', { attr: { x: -1500 }, opacity: 1 }, { attr: { x: 400 }, duration: 1.0, ease: 'power2.inOut', immediateRender: false }, 13.25);
+  const num = { v: 0 };
+  tl.to('#prodText .num', { opacity: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: E3 }, 12.95);
+  tl.fromTo(num, { v: 0 }, { v: 5000, duration: .95, ease: 'power3.out' }, 12.95);
+  tl.to('#prodText .p1', { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .75, ease: E3 }, 13.15);
+  tl.to('#prodText .p2', { opacity: .72, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .75, ease: E3 }, 13.35);
+  tl.to('#legal', { opacity: .55, duration: .5 }, 13.5);
+  tl.to('#prodLabel .line', { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7, ease: E3, stagger: .1 }, 12.62);
+
+  // S7 · end card (15.15 – 18)
+  tl.set('#end', { opacity: 1 }, 15.1);
+  tl.fromTo(endRise, { y: 2050 }, { y: -1500, duration: .7, ease: 'expo.inOut' }, 15.12);
+  tl.to(['#prodText', '#legal', '#bug', '#prodLabel'], { opacity: 0, duration: .3 }, 15.3);
+  tl.fromTo(['#endArchOuter', '#endArchInner'], { opacity: 0 }, { opacity: 1, duration: .6 }, 15.55);
+  tl.to('#cta .l1', { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .85, ease: E3 }, 15.55);
+  tl.to('#cta .l2', { opacity: .95, y: 0, clipPath: 'inset(0% 0% 0% 0%)', filter: 'blur(0px)', duration: .85, ease: E3 }, 15.72);
+  tl.to('#prodName', { opacity: 1, y: 0, duration: .7, ease: E3 }, 16.0);
+  tl.to('#endLogo', { opacity: 1, y: 0, duration: .8, ease: E3 }, 16.15);
+  tl.to('#endTag', { opacity: .92, y: 0, duration: .8, ease: E3 }, 16.35);
+  tl.fromTo('#endGlint', { attr: { x: -1500 } }, { attr: { x: 400 }, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, 16.55);
+  tl.to({}, { duration: 0.01 }, DUR - 0.01);
+
+  // ---------- per-frame state ----------
+  const outerLen = archLen(0), innerLen = archLen(16);
+  function render(t) {
+    // arch
+    const on = arch.on > 0.5;
+    const pOuter = archPath(arch.s, arch.px, arch.py, 0), pInner = archPath(arch.s, arch.px, arch.py, 16);
+    $('#archOuter').setAttribute('d', pOuter); $('#archInner').setAttribute('d', pInner); $('#archShadow').setAttribute('d', pOuter);
+    $('#archClipPath').setAttribute('d', pOuter);
+    const clip = on ? `path('${pOuter}')` : 'none';
+    $('#foot').style.clipPath = clip; $('#niche').style.clipPath = clip; $('#motes').style.clipPath = clip;
+    $('#arch').style.display = on ? 'block' : 'none';
+    // niche: warm vanity light inside the mirror
+    $('#niche').style.background = 'radial-gradient(60% 34% at 50% 58%, #FFFDF8 0%, #FBF5EA 45%, #EFE4D2 100%)';
+    // end panel + its arch
+    $('#endPanel').style.clipPath = riserPath(endRise.y);
+    $('#endArchOuter').setAttribute('d', archPath(1, 540, 1080, 0));
+    $('#endArchInner').setAttribute('d', archPath(1, 540, 1080, 16));
+    $('#endClipPath').setAttribute('d', archPath(1, 540, 1080, 0));
+    // count-up
+    $('#numVal').textContent = Math.round(num.v / 10) * 10 >= 5000 ? '5,000' : Math.round(num.v).toLocaleString('en-US');
+    // motes
+    const pt = Math.max(0, t - 12.3);
+    for (const m of motes) {
+      const y = m.y - m.vy * pt, x = m.x + Math.sin(m.ph + pt * 1.3) * m.amp;
+      const fade = Math.min(1, pt / 0.8);
+      m.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      m.el.style.opacity = (m.a * fade * (0.6 + 0.4 * Math.sin(m.ph * 3 + pt * 2.1))).toFixed(3);
+    }
+  }
+
+  async function updateFootage(t) {
+    const jobs = [];
+    for (const [k, s] of Object.entries(SHOTS)) {
+      const vis = parseFloat(getComputedStyle(s.el).opacity) > 0.001 && (k !== 'E' || t < 12.9);
+      if (!vis) continue;
+      const url = frameUrl(k, frameIndex(s, t));
+      for (const img of s.imgs) {
+        if (img.dataset.src !== url) { img.dataset.src = url; img.src = url; jobs.push(img.decode().catch(() => {})); }
+      }
+    }
+    await Promise.all(jobs);
+  }
+
+  window.__seek = async t => {
+    tl.seek(Math.min(Math.max(t, 0), DUR), false);
+    render(t);
+    await updateFootage(t);
+  };
+
+  // ---------- ready ----------
+  (async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].filter(i => i.src).map(i => i.decode().catch(() => {})));
+    CALL.forEach(wireCallout);
+    await window.__seek(0);
+    window.__ready = true;
+  })();
+})();
+</script>
+</body>
+</html>
