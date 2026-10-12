@@ -48,9 +48,10 @@ async function openPage(tag) {
 async function worker(k, a, b) {
   const { browser, grab } = await openPage('w' + k);
   const out = path.join(SEG, `s${k}.mp4`);
-  const vf = SUB > 1 ? `tmix=frames=${SUB}:weights=${Array(SUB).fill(1).join(' ')},select='eq(mod(n\\,${SUB})\\,${SUB - 1})',setpts=N/${FPS}/TB` : 'null';
+  // keep the captures' full range in the intermediate (finish.sh converts pc → tv once); newer ffmpeg would squeeze it here
+  const vf = (SUB > 1 ? `tmix=frames=${SUB}:weights=${Array(SUB).fill(1).join(' ')},select='eq(mod(n\\,${SUB})\\,${SUB - 1})',setpts=N/${FPS}/TB` : 'null') + ',scale=out_range=pc,format=yuv444p';
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS * SUB), '-c:v', 'mjpeg', '-i', '-',
-    '-vf', vf, '-c:v', 'libx264', '-preset', 'slow', '-crf', '10', '-pix_fmt', 'yuv444p', '-r', String(FPS), out], { stdio: ['pipe', 'ignore', 'inherit'] });
+    '-vf', vf, '-c:v', 'libx264', '-preset', 'slow', '-crf', '10', '-pix_fmt', 'yuv444p', '-color_range', 'pc', '-r', String(FPS), out], { stdio: ['pipe', 'ignore', 'inherit'] });
   const t0 = Date.now();
   for (let i = a; i < b; i++) {
     for (let j = 0; j < SUB; j++) {
