@@ -1,0 +1,17 @@
+  0.92  glint_soft  gain  -24.5 dB  (target lift 2.5 dB)  light runs across the mirror glass
+  1.68  air_rise    gain  -10.7 dB  (target lift 4.0 dB)  air rises into the glass (peak on 2.40)
+  2.33  pass        gain  -24.2 dB  (target lift 4.0 dB)  passing through the mirror
+  7.52  pop2        gain  -16.4 dB  (target lift 3.0 dB)  hair ring
+  7.86  clicksoft   gain  -14.6 dB  (target lift 2.5 dB)  hair pill lands
+  9.02  pop2        gain  -16.4 dB  (target lift 3.0 dB)  skin ring
+  9.36  clicksoft   gain  -14.6 dB  (target lift 2.5 dB)  skin pill lands
+ 10.52  pop2        gain  -16.4 dB  (target lift 3.0 dB)  nails ring
+ 10.86  clicksoft   gain  -14.6 dB  (target lift 2.5 dB)  nails pill lands
+ 11.73  sw2         gain   -5.7 dB  (target lift 4.0 dB)  the mirror closes around her
+ 12.46  sw1         gain  -11.4 dB  (target lift 3.5 dB)  pack rises
+ 12.74  swt         gain   -2.9 dB  (target lift 3.0 dB)  vial slides in
+ 13.30  glint_soft  gain  -24.5 dB  (target lift 2.5 dB)  light sweep on the pack
+ 13.86  click       gain  -10.3 dB  (target lift 3.0 dB)  5,000 lands
+ 15.10  sw2         gain   -5.7 dB  (target lift 4.0 dB)  navy rises
+ 16.10  chime       gain  -12.1 dB  (target lift 4.0 dB)  logo
+ 16.55  glint_soft  gain  -24.5 dB  (target lift 2.5 dB)  glint on the end mirror
