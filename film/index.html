@@ -228,14 +228,14 @@
   $('#cta .l1').textContent = COPY.cta1; $('#cta .l2').textContent = COPY.cta2;
 
   // ---------- footage ----------
-  // caches hold consecutive 30p source frames shown at 25 fps (tools/frames.sh); frame 1 is on screen at `start`
+  // caches hold consecutive 24p source frames shown at 25 fps (tools/frames.sh); frame 1 is on screen at `start`
   const FPS_SRC = 25;
   const SHOTS = {
-    A: { el: $('#shotA'), imgs: $$('#shotA img.main'), start: 0.0,  n: 72,  map: t => t },   // 7957707 face to camera, hazed, mirrored
-    B: { el: $('#shotB'), imgs: $$('#shotB img'), start: 2.2,  n: 131, map: t => t },   // 7957700 back of hair → cut at 4.4 → 7957703 face
-    C: { el: $('#shotC'), imgs: $$('#shotC img'), start: 7.4,  n: 40,  map: t => t },   // 7957699 hair in the air
-    D: { el: $('#shotD'), imgs: $$('#shotD img'), start: 8.9,  n: 40,  map: t => t },   // 7957697 skin close-up
-    E: { el: $('#shotE'), imgs: $$('#shotE img'), start: 10.4, n: 64,  map: t => t },   // 7957703 red nails, hand on her shoulder
+    A: { el: $('#shotA'), imgs: $$('#shotA img.main'), start: 0.0,  n: 72,  map: t => t },   // 8956123 9.2 s: head tilted, leaning in; shrunk, hazed, mirrored
+    B: { el: $('#shotB'), imgs: $$('#shotB img'), start: 2.2,  n: 131, map: t => t },   // 8956123 1.25 s: hands through her hair, the flip on 4.4, face to camera
+    C: { el: $('#shotC'), imgs: $$('#shotC img'), start: 7.4,  n: 40,  map: t => t },   // 8956123 7.5 s: her hair framing her face
+    D: { el: $('#shotD'), imgs: $$('#shotD img'), start: 8.9,  n: 40,  map: t => t },   // 8956123 20.25 s: skin, extreme close-up
+    E: { el: $('#shotE'), imgs: $$('#shotE img'), start: 10.4, n: 64,  map: t => t },   // 8956123 25.7 s: fingertips along her jaw
   };
   const frameUrl = (k, i) => `work/frames/${k}/${String(i).padStart(4, '0')}.jpg`;
   function frameIndex(s, t) {
@@ -300,9 +300,9 @@
 
   // ---------- callouts ----------
   const CALL = [   // target (tx,ty) on the subject, pill centre (cx,cy)
-    { id: '#co0', n: '01  HAIR',  k: COPY.ben[0], tx: 805, ty: 1170, cx: 840, cy: 640 },
-    { id: '#co1', n: '02  SKIN',  k: COPY.ben[1], tx: 800, ty: 980,  cx: 860, cy: 330 },
-    { id: '#co2', n: '03  NAILS', k: COPY.ben[2], tx: 815, ty: 1200, cx: 880, cy: 760 },
+    { id: '#co0', n: '01  HAIR',  k: COPY.ben[0], tx: 930, ty: 230,  cx: 560, cy: 320 },
+    { id: '#co1', n: '02  SKIN',  k: COPY.ben[1], tx: 870, ty: 1120, cx: 860, cy: 900 },
+    { id: '#co2', n: '03  NAILS', k: COPY.ben[2], tx: 122, ty: 1385, cx: 330, cy: 1000 },
   ];
   CALL.forEach(c => {
     const root = $(c.id);
@@ -379,9 +379,9 @@
   // S4 · hair / skin / nails, cut on the beat (7.4, 8.9, 10.4)
   const cuts = [['#shotB', '#shotC', 7.4], ['#shotC', '#shotD', 8.9], ['#shotD', '#shotE', 10.4]];
   cuts.forEach(([a, b, t]) => { tl.set(a, { opacity: 0 }, t); tl.set(b, { opacity: 1 }, t); });
-  tl.fromTo('#shotC', { scale: 1.02, transformOrigin: '540px 820px' }, { scale: 1.08, duration: 1.5, ease: 'none' }, 7.4);
-  tl.fromTo('#shotD', { scale: 1.07, transformOrigin: '800px 980px' }, { scale: 1.13, duration: 1.5, ease: 'none' }, 8.9);
-  tl.fromTo('#shotE', { scale: 1.03, transformOrigin: '540px 950px' }, { scale: 1.10, duration: 2.4, ease: 'none' }, 10.4);
+  tl.fromTo('#shotC', { scale: 1.02, transformOrigin: '930px 230px' }, { scale: 1.08, duration: 1.5, ease: 'none' }, 7.4);
+  tl.fromTo('#shotD', { scale: 1.07, transformOrigin: '870px 1120px' }, { scale: 1.13, duration: 1.5, ease: 'none' }, 8.9);
+  tl.fromTo('#shotE', { scale: 1.03, transformOrigin: '122px 1385px' }, { scale: 1.10, duration: 2.4, ease: 'none' }, 10.4);
   CALL.forEach((c, i) => {
     const t0 = 7.52 + i * 1.5, root = $(c.id);
     tl.to(root.querySelector('.ring'), { scale: 1, opacity: 1, duration: .45, ease: 'back.out(2.2)' }, t0);

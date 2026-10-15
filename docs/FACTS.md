@@ -21,15 +21,16 @@ Sources:
 - https://www.cphi-online.com/product/beauty-in-out-elixir/
 
 ## Footage (Pexels licence: free commercial use, editing allowed, no attribution required; do not imply endorsement by people shown)
-Creator: Artem Podrez — https://www.pexels.com/@artempodrez/ (one studio shoot, same model; 2160×3840 30p, played at 25 fps)
+Creator: KoolShooters — https://www.pexels.com/@koolshooters/ (one 3840×2160 24p take, chosen by the client; every shot is a 9:16 window cut from it, every frame kept and played at 25 fps)
+Clip: 8956123 — https://www.pexels.com/video/8956123/
 
-| Clip | Use | Pexels page |
-|---|---|---|
-| 7957707 | face to camera, "mirror" world (hook, haze added in the grade) | https://www.pexels.com/video/woman-looking-at-the-camera-7957707/ |
-| 7957700 | back of her glossy hair (reality) | https://www.pexels.com/video/flawless-skin-of-a-woman-7957700/ |
-| 7957703 | face to camera under the thesis; hand with red nails on her shoulder | https://www.pexels.com/video/pretty-model-wearing-a-black-top-7957703/ |
-| 7957699 | hair in the air | https://www.pexels.com/video/woman-posing-for-a-shoot-7957699/ |
-| 7957697 | skin close-up | https://www.pexels.com/video/woman-looking-sideways-7957697/ |
+| Take time | Use |
+|---|---|
+| 9.2 – 12.1 s | head tilted, leaning in: the "mirror" world (hook; shrunk into the arch, haze added in the grade) |
+| 1.25 – 6.7 s | through the glass: hands through her hair, the flip, then face to camera under the thesis |
+| 7.5 – 9.1 s | her hair framing her face (hair) |
+| 20.25 – 21.9 s | extreme close-up (skin) |
+| 25.7 – 28.3 s | fingertips along her jaw (nails), the mirror closes |
 
 ## Brand
 - Logo: `Downloads/logo-marnys-cphi.webp` (white on navy).

@@ -1,9 +1,9 @@
 # Credits and licences
 
 ## Footage (real camera footage, not AI)
-All concept footage is one studio shoot by **Artem Podrez** on Pexels — https://www.pexels.com/@artempodrez/
-Clips used: 7957707, 7957700, 7957703, 7957699, 7957697 (4K 2160×3840 30p masters in `source/pexels/`).
-The earlier cut used a khezez shoot (35088444–35088462); those clips were replaced and are only in the git history.
+All concept footage is one take by **KoolShooters** on Pexels, chosen by the client — video 8956123, https://www.pexels.com/video/8956123/ (creator: https://www.pexels.com/@koolshooters/).
+4K 3840×2160 24p master in `source/pexels/`; every shot is a 9:16 window cut from it (`film/tools/frames.sh`).
+Earlier cuts used an Artem Podrez shoot (7957697–7957707) and, before that, a khezez shoot (35088444–35088462); those clips were replaced and are only in the git history.
 Pexels licence: free for commercial use, modification allowed, attribution not required.
 Restrictions to respect: don't portray the person in a bad light, and **don't imply she endorses the product** (no quotes, names, "I use…" captions or before/after claims in the post caption either).
 

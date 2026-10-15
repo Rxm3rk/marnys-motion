@@ -12,7 +12,7 @@
 | Format | 9:16, 1080×1920, ~17 s, Reels safe zones respected. Kurdish Sorani master + Arabic version. |
 | Look | Clean beauty light, texture shots, mirror transitions, soft motion, minimal copy (deck visual direction). MARNYS blue/cream palette; product gold only in the product beat. |
 | Type | UniSIRWAN Somar (matches the earlier Beauty In & Out Kurdish reel). |
-| Footage | Real camera footage only for the concept part (no AI video): one Pexels studio shoot by *Artem Podrez* (4K, warm beige backdrop), same model throughout. |
+| Footage | Real camera footage only for the concept part (no AI video): one Pexels take by *KoolShooters* (8956123, 4K 16:9, window light), chosen by the client and reframed to 9:16; same model throughout. |
 | Product | Real Elixir packshots (box + vial). |
 
 ## Must not claim
